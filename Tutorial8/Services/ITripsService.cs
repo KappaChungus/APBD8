@@ -5,5 +5,8 @@ namespace Tutorial8.Services;
 public interface ITripsService
 {
     Task<List<TripDTO>> GetTrips();
-    Task<TripDTO> GetTripsForClient(int id);
+    Task<ClientDTO> GetTripsForClient(int id);
+    Task<int> InsertClient(ClientDTO client);
+    Task RegisterClientForTrip(int clientId, int tripId);
+    Task DeleteClientTrip(int clientId, int tripId);
 }
