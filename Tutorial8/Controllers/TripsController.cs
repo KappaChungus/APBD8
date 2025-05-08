@@ -5,7 +5,7 @@ using Tutorial8.Services;
 
 namespace Tutorial8.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class TripsController : ControllerBase
     {
@@ -26,15 +26,11 @@ namespace Tutorial8.Controllers
         [HttpGet("clients/{id}/trips")]
         public async Task<IActionResult> GetTrip(int id)
         {
-            try
-            {
-                return Ok(await _tripsService.GetTripsForClient(id));
 
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex);
-            }
+            var trips = await _tripsService.GetTripsForClient(id);
+            if(trips == null)
+                return NotFound("client or trips not found");
+            return Ok(trips);
             
         }
 
@@ -56,7 +52,7 @@ namespace Tutorial8.Controllers
             }
         }
         
-        [HttpPut("api/clients/{id}/trips/{tripId}")]
+        [HttpPut("clients/{id}/trips/{tripId}")]
         public async Task<IActionResult> RegisterClientForTrip(int id, int tripId)
         {
             try
@@ -78,7 +74,7 @@ namespace Tutorial8.Controllers
             }
         }
         
-        [HttpDelete("api/clients/{id}/trips/{tripId}")]
+        [HttpDelete("clients/{id}/trips/{tripId}")]
         public async Task<IActionResult> DeleteClientTrip(int id, int tripId)
         {
             try

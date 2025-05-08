@@ -7,19 +7,21 @@ namespace Tutorial8.Services;
 
 public class TripsService : ITripsService
 {
-    private readonly string _connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=APBD;Integrated Security=True;";
+    private readonly string _connectionString = "Server=localhost;Database=master;Trust Server Certificate=True;Trusted_Connection=True;";
     
     public async Task<List<TripDTO>> GetTrips()
+{
+    var trips = new List<TripDTO>();
+
+    string command = "SELECT IdTrip, Name, Description, DateFrom, DateTo, MaxPeople FROM Trip";
+
+    using SqlConnection conn = new SqlConnection(_connectionString);
+    await conn.OpenAsync();
+
+    // --- 1. Pobieranie podstawowych danych wycieczek ---
+    using (SqlCommand cmd = new SqlCommand(command, conn))
+    using (var reader = await cmd.ExecuteReaderAsync())
     {
-        var trips = new List<TripDTO>();
-
-        string command = "SELECT IdTrip, Name, Description, DateFrom, DateTo, MaxPeople FROM Trip";
-
-        using SqlConnection conn = new SqlConnection(_connectionString);
-        using SqlCommand cmd = new SqlCommand(command, conn);
-        await conn.OpenAsync();
-        using var reader = await cmd.ExecuteReaderAsync();
-
         while (await reader.ReadAsync())
         {
             var trip = new TripDTO
@@ -35,33 +37,34 @@ public class TripsService : ITripsService
 
             trips.Add(trip);
         }
+    } // 🔒 reader ZAMKNIĘTY tutaj
 
-        foreach (var trip in trips)
-        {
-            string countryQuery = @"
+    // --- 2. Pobieranie krajów dla każdej wycieczki ---
+    foreach (var trip in trips)
+    {
+        string countryQuery = @"
             SELECT c.IdCountry, c.Name 
             FROM Country_Trip ct
             JOIN Country c ON ct.IdCountry = c.IdCountry
             WHERE ct.IdTrip = @TripId";
 
-            using SqlCommand countryCmd = new SqlCommand(countryQuery, conn);
-            countryCmd.Parameters.AddWithValue("@TripId", trip.Id);
+        using SqlCommand countryCmd = new SqlCommand(countryQuery, conn);
+        countryCmd.Parameters.AddWithValue("@TripId", trip.Id);
 
-            using var countryReader = await countryCmd.ExecuteReaderAsync();
-            while (await countryReader.ReadAsync())
+        using var countryReader = await countryCmd.ExecuteReaderAsync();
+        while (await countryReader.ReadAsync())
+        {
+            trip.Countries.Add(new CountryDTO
             {
-                trip.Countries.Add(new CountryDTO
-                {
-                    IdCountry = countryReader.GetInt32(countryReader.GetOrdinal("IdCountry")),
-                    Name = countryReader.GetString(countryReader.GetOrdinal("Name"))
-                });
-            }
-
-            countryReader.Close();
+                IdCountry = countryReader.GetInt32(countryReader.GetOrdinal("IdCountry")),
+                Name = countryReader.GetString(countryReader.GetOrdinal("Name"))
+            });
         }
-
-        return trips;
     }
+
+    return trips;
+}
+
 
 
     public async Task<ClientDTO> GetTripsForClient(int clientId)
@@ -86,7 +89,7 @@ public class TripsService : ITripsService
         using var reader = await cmd.ExecuteReaderAsync();
 
         if (!reader.HasRows)
-            throw new Exception("Client not found or client has no trips");
+            return null;
 
         while (await reader.ReadAsync())
         {
@@ -100,8 +103,8 @@ public class TripsService : ITripsService
                     Email = reader.GetString(reader.GetOrdinal("Email")),
                     Telephone = reader.GetString(reader.GetOrdinal("Telephone")),
                     Pesel = reader.GetString(reader.GetOrdinal("Pesel")),
-                    RegisteredAt = reader.GetDateTime(reader.GetOrdinal("RegisteredAt")),
-                    PaymentDate = reader.GetDateTime(reader.GetOrdinal("PaymentDate")),
+                    RegisteredAt = reader.GetInt32(reader.GetOrdinal("RegisteredAt")),
+                    PaymentDate = reader.GetInt32(reader.GetOrdinal("PaymentDate")),
                     Trips = new List<TripDTO>()
                 };
             }
@@ -211,7 +214,8 @@ public class TripsService : ITripsService
         {
             insertCmd.Parameters.AddWithValue("@ClientId", clientId);
             insertCmd.Parameters.AddWithValue("@TripId", tripId);
-            insertCmd.Parameters.AddWithValue("@RegisteredAt", DateTime.Now);
+            int today = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            insertCmd.Parameters.AddWithValue("@RegisteredAt", today);
             await insertCmd.ExecuteNonQueryAsync();
         }
     }

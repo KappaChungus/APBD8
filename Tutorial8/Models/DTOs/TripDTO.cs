@@ -25,7 +25,7 @@ public class ClientDTO{
     public string Email { get; set; }
     public string Telephone { get; set; }
     public string Pesel { get; set; }
-    public List<TripDTO> Trips { get; set; }
-    public DateTime RegisteredAt { get; set; }
-    public DateTime PaymentDate { get; set; }
+    public List<TripDTO>? Trips { get; set; }
+    public int? RegisteredAt { get; set; }
+    public int? PaymentDate { get; set; }
 }
