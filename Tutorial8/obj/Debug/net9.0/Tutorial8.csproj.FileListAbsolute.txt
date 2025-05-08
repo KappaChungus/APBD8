@@ -1,0 +1,7 @@
+C:\Users\riftwalker\Desktop\4 sem\APBD\Tutorial8\obj\Debug\net9.0\Tutorial8.csproj.AssemblyReference.cache
+C:\Users\riftwalker\Desktop\4 sem\APBD\Tutorial8\obj\Debug\net9.0\Tutorial8.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\riftwalker\Desktop\4 sem\APBD\Tutorial8\obj\Debug\net9.0\Tutorial8.AssemblyInfoInputs.cache
+C:\Users\riftwalker\Desktop\4 sem\APBD\Tutorial8\obj\Debug\net9.0\Tutorial8.AssemblyInfo.cs
+C:\Users\riftwalker\Desktop\4 sem\APBD\Tutorial8\obj\Debug\net9.0\Tutorial8.csproj.CoreCompileInputs.cache
+C:\Users\riftwalker\Desktop\4 sem\APBD\Tutorial8\obj\Debug\net9.0\Tutorial8.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\riftwalker\Desktop\4 sem\APBD\Tutorial8\obj\Debug\net9.0\Tutorial8.MvcApplicationPartsAssemblyInfo.cache
