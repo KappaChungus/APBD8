@@ -1,0 +1,47 @@
+﻿## Rider / IntelliJ IDEA
+.idea/
+*.sln.iml
+
+## VSCode (optional, if you also use it)
+.vscode/
+
+## User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build output
+bin/
+obj/
+out/
+artifacts/
+
+## Rider / ReSharper
+.ReSharper*/
+*.DotSettings.user
+
+## ASP.NET temp files
+**/Generated_Code/
+
+## NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Logs
+*.log
+
+## Others
+*.vs/
+*.dbmdl
+*.pidb
+*.svclog
+*.scc
+
+# OS junk files
+.DS_Store
+Thumbs.db
